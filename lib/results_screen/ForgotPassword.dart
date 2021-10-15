@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 
@@ -6,13 +5,11 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 class ForgotPassword extends StatelessWidget {
   static String id = '/ForgotPassword';
 
-  final _auth = FirebaseAuth.instance;
+  final _auth = '';
 
   String email;
 
-  Future<void> resetPassword(String email) async {
-    await _auth.sendPasswordResetEmail(email: email);
-  }
+  Future<void> resetPassword(String email) async {}
 
   @override
   Widget build(BuildContext context) {

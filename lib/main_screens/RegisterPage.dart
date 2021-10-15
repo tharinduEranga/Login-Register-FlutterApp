@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:task/results_screen/Done.dart';
 import 'package:task/results_screen/GoogleDone.dart';
 import 'package:task/main_screens/LoginPage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:validators/validators.dart' as validator;
 
@@ -28,38 +26,18 @@ class _RegisterPageState extends State<RegisterPage> {
   String _emailText = 'Please use a valid email';
   String _passwordText = 'Please use a strong password';
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final String _googleSignIn = '';
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final String _auth = '';
 
-  Future<FirebaseUser> _handleSignIn() async {
-    // hold the instance of the authenticated user
-    FirebaseUser user;
-    // flag to check whether we're signed in already
-    bool isSignedIn = await _googleSignIn.isSignedIn();
-    if (isSignedIn) {
-      // if so, return the current user
-      user = await _auth.currentUser();
-    } else {
-      final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      // get the credentials to (access / id token)
-      // to sign in via Firebase Authentication
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
-          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-      user = (await _auth.signInWithCredential(credential)).user;
-    }
-
-    return user;
+  Future<String> _handleSignIn() async {
+    return 'Registered!';
   }
 
   void onGoogleSignIn(BuildContext context) async {
-    FirebaseUser user = await _handleSignIn();
+    String user = await _handleSignIn();
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => GoogleDone(user, _googleSignIn)));
+        context, MaterialPageRoute(builder: (context) => GoogleDone(user)));
   }
 
   @override
@@ -152,15 +130,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           setState(() {
                             _showSpinner = true;
                           });
-                          final newUser =
-                              await _auth.createUserWithEmailAndPassword(
-                            email: email,
-                            password: password,
-                          );
-                          if (newUser != null) {
-                            print('user authenticated by registration');
-                            Navigator.pushNamed(context, Done.id);
-                          }
+
+                          print('user authenticated by registration');
+                          Navigator.pushNamed(context, Done.id);
                         }
 
                         setState(() {

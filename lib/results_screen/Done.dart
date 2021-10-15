@@ -1,7 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-FirebaseUser loggedInUser;
+String loggedInUser;
 
 // ignore: must_be_immutable
 class Done extends StatefulWidget {
@@ -12,12 +11,12 @@ class Done extends StatefulWidget {
 }
 
 class _DoneState extends State<Done> {
-  final _auth = FirebaseAuth.instance;
+  final _auth = '';
 
   void getCurrentUser() async {
     try {
       //TODO 10 : New user variable to check if a newUser is signed in
-      final user = await _auth.currentUser();
+      final user = _auth;
       //Equal to null if no user is signed in, else equal to new user details
       //TODO 11 : Use if else block to get the loggedInUser details
       if (user != null) {

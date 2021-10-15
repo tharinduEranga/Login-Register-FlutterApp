@@ -1,16 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:task/results_screen/ForgotPassword.dart';
 import 'package:task/results_screen/GoogleDone.dart';
 import 'package:task/main_screens/RegisterPage.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import '../results_screen/Done.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 bool _wrongEmail = false;
 bool _wrongPassword = false;
-
-FirebaseUser _user;
 
 // ignore: must_be_immutable
 class LoginPage extends StatefulWidget {
@@ -26,29 +22,12 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _showSpinner = false;
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  Future<FirebaseUser> _handleSignIn() async {
+  Future<String> _handleSignIn() async {
     // hold the instance of the authenticated user
 //    FirebaseUser user;
     // flag to check whether we're signed in already
-    bool isSignedIn = await _googleSignIn.isSignedIn();
-    if (isSignedIn) {
-      // if so, return the current user
-      _user = await _auth.currentUser();
-    } else {
-      final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      // get the credentials to (access / id token)
-      // to sign in via Firebase Authentication
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
-          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-      _user = (await _auth.signInWithCredential(credential)).user;
-    }
 
-    return _user;
+    return 'Welcome!';
   }
 
   void onGoogleSignIn(BuildContext context) async {
@@ -56,16 +35,14 @@ class _LoginPageState extends State<LoginPage> {
       _showSpinner = true;
     });
 
-    FirebaseUser user = await _handleSignIn();
+    String user = await _handleSignIn();
 
     setState(() {
       _showSpinner = true;
     });
 
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => GoogleDone(user, _googleSignIn)));
+        context, MaterialPageRoute(builder: (context) => GoogleDone(user)));
   }
 
   String emailText = 'Email doesn\'t match';
@@ -167,11 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                           _wrongEmail = false;
                           _wrongPassword = false;
                         });
-                        final newUser = await _auth.signInWithEmailAndPassword(
-                            email: email, password: password);
-                        if (newUser != null) {
-                          Navigator.pushNamed(context, Done.id);
-                        }
+                        Navigator.pushNamed(context, Done.id);
                       } catch (e) {
                         print(e.code);
                         if (e.code == 'ERROR_WRONG_PASSWORD') {
